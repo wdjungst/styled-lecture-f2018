@@ -7,9 +7,26 @@ import {
   Icon,
   Grid,
 } from 'semantic-ui-react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import axios from 'axios'
 import { HeaderText } from './Typography'
+
+const rotate360 = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+`
+
+const Star = styled.div`
+  display: inline-block;
+  color: yellow;
+  text-shadow: 1px 1px 1px black;
+  animation: ${rotate360} 2s linear infinite;
+`
 
 const AppContainer = styled.div`
   background: linear-gradient(to bottom right, aliceblue, black);
@@ -21,6 +38,10 @@ const Transparent = styled(Segment)`
 
 const StyledCard = styled(Card)`
   height: 200px;
+`
+
+const IssueCard = styled(StyledCard)`
+  border: solid 3px red !important;
 `
 
 const Truncated = styled.div`
@@ -51,23 +72,32 @@ class App extends React.Component {
           <HeaderText>My Projects</HeaderText>
           <Grid>
             <Grid.Row>
-              { this.state.repos.map( r =>
-                  <Grid.Column key={r.id} width={4}>
-                    <StyledCard>
-                      <Card.Content>
-                        <Card.Header>
-                          <Truncated>
-                            { r.full_name }
-                          </Truncated>
-                        </Card.Header>
-                        <Card.Meta>
-                          <Truncated>
-                            { r.description }
-                          </Truncated>
-                        </Card.Meta>
-                      </Card.Content>
-                    </StyledCard>
-                  </Grid.Column>
+              { this.state.repos.map( r => {
+                    const TheCard = r.open_issues > 0 ? IssueCard : StyledCard
+                    return (
+                      <Grid.Column key={r.id} width={4}>
+                        <TheCard>
+                          <Card.Content>
+                            <Card.Header>
+                              <Truncated>
+                                { r.full_name }
+                              </Truncated>
+                            </Card.Header>
+                            <Card.Meta>
+                              <Truncated>
+                                { r.description }
+                              </Truncated>
+                            </Card.Meta>
+                            { r.stargazers_count > 0 &&
+                                <Star>
+                                  <Icon name="star" />
+                                </Star>
+                            }
+                          </Card.Content>
+                        </TheCard>
+                      </Grid.Column>
+                    )
+                  }
                 )
               }
             </Grid.Row>
