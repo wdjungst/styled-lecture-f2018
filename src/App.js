@@ -11,6 +11,14 @@ import styled, { keyframes } from 'styled-components'
 import axios from 'axios'
 import { HeaderText } from './Typography'
 
+const SearchBox = styled.input.attrs({
+  placeholder: 'search',
+  id: 'myInput',
+})`
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+`
 const ButtonLink = styled.a`
   float: right;
   padding: 10px 30px;
@@ -60,7 +68,7 @@ const Truncated = styled.div`
 `
 
 class App extends React.Component {
-  state = { repos: [] }
+  state = { repos: [], visible: [] }
 
   componentDidMount() {
     //this.getRepos()
@@ -68,19 +76,35 @@ class App extends React.Component {
 
   getRepos = () => {
     axios.get('https://api.github.com/users/wdjungst/repos?sort=create')
-      .then( res => this.setState({ repos: res.data }) )
+      .then( res => this.setState({ repos: res.data, visible: res.data }) )
+  }
+
+  search = () => {
+    const regex = new RegExp(this.searchTerm.value.toLowerCase())
+    const { repos } = this.state
+    if (this.searchTerm.value === '') {
+      this.setState({ visible: repos })
+    } else {
+      const found = repos.filter( r => regex.test(r.full_name.toLowerCase()) )
+      this.setState({ visible: found })
+    }
   }
 
   render() {
     return (
       <AppContainer>
         <Button onClick={this.getRepos}>Get Repos</Button>
+        <label>Search</label>
+        <SearchBox 
+          onChange={this.search} 
+          innerRef={ domNode => this.searchTerm = domNode }
+        />
         <HeaderText fSize="large">My Portfolio</HeaderText>
         <Transparent>
           <HeaderText>My Projects</HeaderText>
           <Grid>
             <Grid.Row>
-              { this.state.repos.map( r => {
+              { this.state.visible.map( r => {
                     const TheCard = r.open_issues > 0 ? IssueCard : StyledCard
                     return (
                       <Grid.Column key={r.id} width={4}>
