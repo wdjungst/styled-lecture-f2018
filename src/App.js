@@ -11,6 +11,14 @@ import styled, { keyframes } from 'styled-components'
 import axios from 'axios'
 import { HeaderText } from './Typography'
 
+const ButtonLink = styled.a`
+  float: right;
+  padding: 10px 30px;
+  border-radius: 10px;
+  color: ${ props => props.theme.fg } !important;
+  background-color: ${ props => props.theme.bg };
+`
+
 const rotate360 = keyframes`
   from {
     transform: rotate(0deg);
@@ -93,6 +101,15 @@ class App extends React.Component {
                                   <Icon name="star" />
                                 </Star>
                             }
+                          </Card.Content>
+                          <Card.Content extra>
+                            <ButtonLink
+                              href={r.html_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              View
+                            </ButtonLink>
                           </Card.Content>
                         </TheCard>
                       </Grid.Column>
