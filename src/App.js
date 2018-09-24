@@ -6,17 +6,27 @@ import {
   Card,
   Icon
 } from 'semantic-ui-react'
+import styled from 'styled-components'
+import { HeaderText } from './Typography'
+
+const AppContainer = styled.div`
+  background: linear-gradient(to bottom right, aliceblue, black);
+`
+
+const Transparent = styled(Segment)`
+  background: transparent !important;
+`
 
 const App = () => (
-  <div>
-    <Header as="h1" textAlign="center">My Portfolio</Header>
-    <Segment>
-      <Header as="h2" textAlign="center">My Projects</Header>
-    </Segment>
-    <Segment>
-      <Header as="h2" textAlign="center">Contact</Header>
-    </Segment>
-  </div>
+  <AppContainer>
+    <HeaderText fSize="large">My Portfolio</HeaderText>
+    <Transparent>
+      <HeaderText>My Projects</HeaderText>
+    </Transparent>
+    <Transparent>
+      <HeaderText fSize="small">Contact</HeaderText>
+    </Transparent>
+  </AppContainer>
 )
 
 export default App
